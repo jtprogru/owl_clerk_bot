@@ -21,7 +21,7 @@ run.bin: build
 
 .PHONY: install-deps
 ## Install all requirements
-install-deps: go.mod go.sum
+install-deps: go.mod
 	$(SYS_GO) mod tidy
 
 .PHONY: build
