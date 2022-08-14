@@ -14,10 +14,10 @@ RUN go mod download
 COPY . .
 
 # Unit tests
-RUN CGO_ENABLED=0 go test -v
+#RUN CGO_ENABLED=0 go test -v
 
 # Build the Go app
-RUN make build
+RUN go mod download && CGO_ENABLED=0 go build -o ./dist/owl_clerk_bot cmd/app/main.go
 
 # Start fresh from a smaller image
 FROM alpine:3.9

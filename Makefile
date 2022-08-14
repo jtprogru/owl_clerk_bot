@@ -5,8 +5,12 @@ SHELL := /bin/bash
 # Global vars
 export SYS_GO=$(shell which go)
 export SYS_GOFMT=$(shell which gofmt)
+export SYS_DOCKER=$(shell which docker)
+
 export BINARY_DIR=dist
 export BINARY_NAME=owl_clerk_bot
+export DOCKER_REPO="ghcr.io/jtprogru/$(BINARY_NAME)"
+export LATEST_COMMIT_SHA=$(shell git rev-parse --short HEAD)
 
 include .env
 export $(shell sed 's/=.*//' .env)
@@ -21,18 +25,33 @@ run.cmd: cmd/app/main.go
 
 .PHONY: run.bin
 ## Run as binary
-run.bin: build
+run.bin: build.bin
 	source .env && ./$(BINARY_DIR)/$(BINARY_NAME)
+
+.PHONY: run.dc
+## Run in Docker
+run.dc: build.img
+	$(SYS_DOCKER) compose up -d
+
+.PHONY: down.dc
+## Down Docker compose
+down.dc:
+	$(SYS_DOCKER) down -v
 
 .PHONY: install-deps
 ## Install all requirements
 install-deps: go.mod
 	$(SYS_GO) mod tidy
 
-.PHONY: build
-## Build bot
-build: cmd/app/main.go
+.PHONY: build.bin
+## Build bin file from go
+build.bin: cmd/app/main.go
 	$(SYS_GO) mod download && CGO_ENABLED=0 $(SYS_GO) build -o ./$(BINARY_DIR)/$(BINARY_NAME) cmd/app/main.go
+
+.PHONY: build.img
+## Build docker image
+build.img: Dockerfile
+	$(SYS_DOCKER) build -t $(DOCKER_REPO):$(LATEST_COMMIT_SHA) .
 
 .PHONY: fmt
 ## Run go fmt
