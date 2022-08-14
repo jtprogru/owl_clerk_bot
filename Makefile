@@ -8,6 +8,11 @@ export SYS_GOFMT=$(shell which gofmt)
 export BINARY_DIR=dist
 export BINARY_NAME=owl_clerk_bot
 
+include .env
+export $(shell sed 's/=.*//' .env)
+
+test.env:
+	env
 
 .PHONY: run.cmd
 ## Run as go run cmd/app/main.go
