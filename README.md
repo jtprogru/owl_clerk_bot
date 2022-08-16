@@ -2,13 +2,33 @@
 
 Бот-секретарь которого я буду использовать везде, где сейчас указан мой прямой Телеграм-аккаунт.
 
-Задачи бота:
-- [ ] Принимать входящие сообщения;
-- [ ] Регистрировать пользователя в БД;
-- [ ] Собирать всю отправленную информацию от пользователя и передавать ее мне;
+## Запуск
+Создать файл `.env`:
+```shell
+export OWL_BOT_TOKEN="1234567890:VCDRJHGYUIKMNBGYUIKMNBvfr45678iuyhgtfr567u"
+export OWL_DEBUG=1
+export OWL_SERVE_PORT=8000
+export OWL_SERVE_HOST=127.0.0.1
+```
 
-Дополнительные штуки:
-- [ ] Веб-морда с различного рода информацией (кто/когда/сколько/откуда/etc);
-- [ ] Возможность отправить конкретному пользователю сообщение прямо из веб-морды;
-- [ ] Видеть контакты пользователя, которые он оставил;
-- [ ] Отдельная регистрация HR'ов;
+Выполнить для запуска локально:
+```shell
+make run.bin
+```
+
+Доступные команды:
+```shell
+build.bin           Build bin file from go
+build.img           Build docker image
+clean               Clean all artifacts
+down.dc             Down Docker compose
+fmt                 Run go fmt
+help                Show this help message
+install-deps        Install all requirements
+lint                Run golangci-lint
+run.bin             Run as binary
+run.cmd             Run as go run cmd/app/main.go
+run.dc              Run in Docker
+test                Run all test
+vet                 Run go vet ./...
+```
