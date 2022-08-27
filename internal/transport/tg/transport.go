@@ -2,6 +2,7 @@ package tg
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -22,7 +23,8 @@ type Storer interface {
 
 func (tg *TG) handleMessage(c tele.Context) error {
 	ctx := context.WithValue(context.Background(), "xrayID", uuid.New())
-	tg.logger.WithContext(ctx).Debug("message recived")
+	log := tg.logger.WithContext(ctx)
+	log.Debug("message recived")
 	uid := c.Sender().ID
 	fName := c.Sender().FirstName
 	lName := c.Sender().LastName
@@ -41,10 +43,33 @@ func (tg *TG) handleMessage(c tele.Context) error {
 	return nil
 }
 
-func (tg *TG) Run() {
-	tg.b.Handle(tele.OnText, tg.handleMessage)
+// onPing simple pinger.
+func (tg *TG) onPing(c tele.Context) error {
+	ctx := context.WithValue(context.Background(), "xrayID", uuid.New())
+	log := tg.logger.WithContext(ctx)
+	log.Info("ping-pong")
+	if c == nil {
+		log.WithError(errors.New("ErrNilContext"))
+		return errors.New("ErrNilContext")
+	}
 
-	tg.logger.Infof("bot is starting")
+	reply, err := c.Bot().Reply(c.Message(), "PONG")
+	if err != nil {
+		log.WithError(err)
+		return err
+	}
+	log.WithFields(logrus.Fields{"command": "/ping", "from ": c.Sender().Username, "msg": reply.Text}).Info("ping-pong")
+
+	return nil
+}
+
+func (tg *TG) Run() {
+	ctx := context.WithValue(context.Background(), "xrayID", uuid.New())
+	log := tg.logger.WithContext(ctx)
+	tg.b.Handle(tele.OnText, tg.handleMessage)
+	tg.b.Handle("/ping", tg.onPing)
+
+	log.Info("bot is starting")
 
 	tg.b.Start()
 }

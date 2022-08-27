@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"os"
+
+	"github.com/sirupsen/logrus"
+
 	"github.com/jtprogru/owl_clerk_bot/internal/service"
 	"github.com/jtprogru/owl_clerk_bot/internal/transport/tg"
-	"github.com/sirupsen/logrus"
-	"os"
 )
 
 type MockStorer struct{}
@@ -33,15 +35,15 @@ func main() {
 	logger.Out = os.Stdout
 	logger.SetReportCaller(true)
 
-	logger.Info("bot is started...")
 	botToken := os.Getenv("OWL_BOT_TOKEN")
 	cfg := &tg.Config{
 		BotToken: botToken,
 		IsDebug:  false,
 	}
 	storer := &MockStorer{}
-	service := service.NewService(storer, storer)
-	tg := tg.NewTG(service, logger, cfg)
+	s := service.NewService(storer, storer)
+	client := tg.NewTG(s, logger, cfg)
 
-	tg.Run()
+	client.Run()
+	logger.Info("bot stopped...")
 }
