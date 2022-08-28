@@ -3,26 +3,38 @@ package main
 import (
 	"context"
 	"os"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/jtprogru/owl_clerk_bot/internal/service"
+	// "github.com/jtprogru/owl_clerk_bot/internal/service"
 	"github.com/jtprogru/owl_clerk_bot/internal/transport/tg"
 )
 
-type MockStorer struct{}
+type MockSM struct{}
 
-func (m MockStorer) SaveOrUpdate(ctx context.Context, uid int64, fName, lName, username string) error {
-	logrus.Info("SaveOrUpdate is called")
-	return nil
+type MockAnswer struct {
+	msg string
+	kb  []string
 }
-func (m MockStorer) Save(ctx context.Context, uid int64, msg string) error {
-	logrus.Info("Save is called")
-	return nil
+
+func (ma MockAnswer) GetMessage() string {
+	return ma.msg
 }
-func (m MockStorer) GetMessagesByUID(ctx context.Context, uid int64) ([]string, error) {
-	logrus.Info("GetMessagesByUID is called")
-	return nil, nil
+
+func (ma MockAnswer) GetKeyboard() []string {
+	return ma.kb
+}
+
+func (msm MockSM) SaveOrUpdateState(ctx context.Context, p tg.Profile, m tg.Message) (tg.Answer, error) {
+	userID := p.GetUID()
+	username := p.GetUsername()
+	msg := m.GetMessage()
+
+	return MockAnswer{
+		msg: msg,
+		kb:  []string{strconv.FormatInt(userID, 10), username},
+	}, nil
 }
 
 func main() {
@@ -40,9 +52,9 @@ func main() {
 		BotToken: botToken,
 		IsDebug:  false,
 	}
-	storer := &MockStorer{}
-	s := service.NewService(storer, storer)
-	client := tg.NewTG(s, logger, cfg)
+	// s := service.NewService(storer, storer)
+	mocksm := MockSM{}
+	client := tg.NewTG(mocksm, logger, cfg)
 
 	client.Run()
 	logger.Info("bot stopped...")
