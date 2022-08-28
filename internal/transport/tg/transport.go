@@ -2,6 +2,7 @@ package tg
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,51 +11,129 @@ import (
 )
 
 type TG struct {
-	storer Storer
 	logger *logrus.Logger
 	b      *tele.Bot
+	sm     StateMachine
 }
 
-type Storer interface {
-	StoreMessage(ctx context.Context, uid int64, msg string) error
-	StoreOrUpdateProfile(ctx context.Context, uid int64, fName, lName, username string) error
+type Profile struct {
+	uid                    int64
+	fName, lName, username string
+}
+
+func (p Profile) GetUID() int64 {
+	return p.uid
+}
+
+func (p Profile) GetFirstName() string {
+	return p.fName
+}
+
+func (p Profile) GetLastName() string {
+	return p.lName
+}
+
+func (p Profile) GetUsername() string {
+	return p.username
+}
+
+type Message struct {
+	msg string
+}
+
+func (m Message) GetMessage() string {
+	return m.msg
+}
+
+type StateMachine interface {
+	SaveOrUpdateState(ctx context.Context, p Profile, m Message) (Answer, error)
+}
+
+type Answer interface {
+	GetMessage() string
+	GetKeyboard() []string
 }
 
 func (tg *TG) handleMessage(c tele.Context) error {
 	ctx := context.WithValue(context.Background(), "xrayID", uuid.New())
-	tg.logger.WithContext(ctx).Debug("message recived")
-	uid := c.Sender().ID
-	fName := c.Sender().FirstName
-	lName := c.Sender().LastName
-	username := c.Sender().Username
+	log := tg.logger.WithContext(ctx)
+	log.Debug("message recived")
 
-	if err := tg.storer.StoreOrUpdateProfile(ctx, uid, fName, lName, username); err != nil {
-		tg.logger.WithContext(ctx).WithError(err).Error("failed StoreOrUpdateProfile")
+	p := Profile{}
+	m := Message{}
+
+	p.uid = c.Sender().ID
+	p.fName = c.Sender().FirstName
+	p.lName = c.Sender().LastName
+	p.username = c.Sender().Username
+	m.msg = c.Message().Text
+
+	a, err := tg.sm.SaveOrUpdateState(ctx, p, m)
+	if err != nil {
+		log.WithError(err).Error("cant save or update answer")
 		return err
 	}
 
-	if err := tg.storer.StoreMessage(ctx, uid, c.Message().Text); err != nil {
-		tg.logger.WithContext(ctx).WithError(err).Error("failed StoreMessage")
-		return err
+	if msg := a.GetMessage(); len(msg) > 0 {
+		c.Bot().Reply(c.Message(), msg)
+	}
+
+	if kb := a.GetKeyboard(); len(kb) > 0 {
+		var btns []tele.Row
+		// Universal markup builders.
+		menu := &tele.ReplyMarkup{ResizeKeyboard: true}
+
+		for _, tkb := range kb {
+			btns = append(btns, menu.Row(menu.Text(tkb)))
+		}
+		menu.Reply(btns...)
+		err := c.Send("menu", menu)
+		if err != nil {
+			log.WithError(err).Error("cant send menu")
+			return err
+		}
 	}
 
 	return nil
 }
 
-func (tg *TG) Run() {
-	tg.b.Handle(tele.OnText, tg.handleMessage)
+// onPing simple pinger.
+func (tg *TG) onPing(c tele.Context) error {
+	ctx := context.WithValue(context.Background(), "xrayID", uuid.New())
+	log := tg.logger.WithContext(ctx)
+	log.Info("ping-pong")
+	if c == nil {
+		log.WithError(errors.New("ErrNilContext"))
+		return errors.New("ErrNilContext")
+	}
 
-	tg.logger.Infof("bot is starting")
+	reply, err := c.Bot().Reply(c.Message(), "PONG")
+	if err != nil {
+		log.WithError(err)
+		return err
+	}
+	log.WithFields(logrus.Fields{"command": "/ping", "from ": c.Sender().Username, "msg": reply.Text}).Info("ping-pong")
+
+	return nil
+}
+
+func (tg *TG) Run() {
+	ctx := context.WithValue(context.Background(), "xrayID", uuid.New())
+	log := tg.logger.WithContext(ctx)
+	tg.b.Handle(tele.OnText, tg.handleMessage)
+	tg.b.Handle("/ping", tg.onPing)
+
+	log.Info("bot is starting")
 
 	tg.b.Start()
 }
 
-func NewTG(storer Storer, logger *logrus.Logger, cfg *Config) *TG {
+func NewTG(sm StateMachine, logger *logrus.Logger, cfg *Config) *TG {
 	var err error
 
 	tg := &TG{
 		logger: logger,
-		storer: storer,
+		sm:     sm,
 	}
 	tg.b, err = tele.NewBot(tele.Settings{
 		Token:   cfg.BotToken,
