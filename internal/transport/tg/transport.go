@@ -5,6 +5,8 @@ import (
 	"errors"
 	"time"
 
+	"github.com/jtprogru/owl_clerk_bot/internal/conf"
+
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	tele "gopkg.in/telebot.v3"
@@ -118,6 +120,7 @@ func (tg *TG) onPing(c tele.Context) error {
 }
 
 func (tg *TG) Run() {
+
 	ctx := context.WithValue(context.Background(), "xrayID", uuid.New())
 	log := tg.logger.WithContext(ctx)
 	tg.b.Handle(tele.OnText, tg.handleMessage)
@@ -128,18 +131,19 @@ func (tg *TG) Run() {
 	tg.b.Start()
 }
 
-func NewTG(sm StateMachine, logger *logrus.Logger, cfg *Config) *TG {
+func NewTG(sm StateMachine, conf *conf.Config) *TG {
 	var err error
-
+	logger := conf.GetLogger()
 	tg := &TG{
 		logger: logger,
 		sm:     sm,
 	}
 	tg.b, err = tele.NewBot(tele.Settings{
-		Token:   cfg.BotToken,
+		Token:   conf.GetBotToken(),
 		Poller:  &tele.LongPoller{Timeout: 10 * time.Second},
-		Verbose: cfg.IsDebug,
+		Verbose: conf.GetIsDebug(),
 		OnError: func(err error, c tele.Context) {
+
 			logger.WithError(err).Error("bot on error")
 		},
 	})
