@@ -17,3 +17,16 @@
 - [ ] Видеть контакты пользователя, которые он оставил;
 - [ ] Отдельная регистрация HR'ов;
 
+
+| func | input | output        |
+|:---|:---|:--------------|
+|SaveOrUpdateState| ctx context.Context, p IProfile, m IMessage| Answer, error |
+
+| func | input                                     | output        |
+|:---|:------------------------------------------|:--------------|
+|SaveOrUpdateState| ctx context.Context, p Profile, m Message| answer, error |
+
+
+IProfile
+IMessage
+Answer
