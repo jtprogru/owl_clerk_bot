@@ -2,16 +2,12 @@ package main
 
 import (
 	"context"
-	"os"
-	"strconv"
-
 	"github.com/sirupsen/logrus"
+	"os"
 
-	// "github.com/jtprogru/owl_clerk_bot/internal/service"
+	"github.com/jtprogru/owl_clerk_bot/internal/ex"
 	"github.com/jtprogru/owl_clerk_bot/internal/transport/tg"
 )
-
-type MockSM struct{}
 
 type MockAnswer struct {
 	msg string
@@ -26,15 +22,12 @@ func (ma MockAnswer) GetKeyboard() []string {
 	return ma.kb
 }
 
-func (msm MockSM) SaveOrUpdateState(ctx context.Context, p tg.Profile, m tg.Message) (tg.Answer, error) {
-	userID := p.GetUID()
-	username := p.GetUsername()
-	msg := m.GetMessage()
+type csm struct {
+	sm ex.SM
+}
 
-	return MockAnswer{
-		msg: msg,
-		kb:  []string{strconv.FormatInt(userID, 10), username},
-	}, nil
+func (s csm) SaveOrUpdateState(ctx context.Context, p tg.IProfile, m tg.IMessage) (tg.Answer, error) {
+	return s.sm.SaveOrUpdateState(ctx, p, m)
 }
 
 func main() {
@@ -52,8 +45,9 @@ func main() {
 		BotToken: botToken,
 		IsDebug:  false,
 	}
-	// s := service.NewService(storer, storer)
-	mocksm := MockSM{}
+	mocksm := csm{
+		sm: ex.SM{},
+	}
 	client := tg.NewTG(mocksm, logger, cfg)
 
 	client.Run()
