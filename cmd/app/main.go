@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/jtprogru/owl_clerk_bot/internal/service/ex"
+	"github.com/jtprogru/owl_clerk_bot/internal/service/sm"
 	"github.com/sirupsen/logrus"
 	"os"
 
@@ -23,7 +23,7 @@ func (ma MockAnswer) GetKeyboard() []string {
 }
 
 type csm struct {
-	sm *ex.SM
+	sm *sm.SM
 }
 
 func (s csm) SaveOrUpdateState(ctx context.Context, p tg.IProfile, m tg.IMessage) (tg.Answer, error) {
@@ -46,7 +46,7 @@ func main() {
 		IsDebug:  false,
 	}
 	mocksm := csm{
-		sm: ex.NewSM(),
+		sm: sm.NewSM(),
 	}
 	client := tg.NewTG(mocksm, logger, cfg)
 
