@@ -102,6 +102,18 @@ func TestButtonSelect(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name: "- Return [index]",
+			p:    tg.Profile{},
+			m: MockAnswer{
+				msg: "State66",
+			},
+			cs:      4,
+			nx:      []int{5, 6, 1, 2},
+			btn:     []string{"State5", "State6", "State1", "State2"},
+			want:    2,
+			wantErr: true,
+		},
+		{
 			name: "+ != Len",
 			p:    tg.Profile{},
 			m: MockAnswer{

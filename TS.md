@@ -32,11 +32,11 @@ IMessage
 Answer
 
 
-| Id  | Next    | Answer  | Buttons | Handler |
-|:----|:--------|:--------|:--------|:--------|
-| 0   | 1       | Кто ты? |     |
-| 1   | 1,2,3,4 | Ты HR?  | HR, NOT HR, CALC| ButtonSelect
-| 2   | 2       | HR      | YES, NO | ButtonSelect
-| 3   | 3       | NON HR  | YES, NO | ButtonSelect
-| 4   | 5       | =+-*    | |Calculate
-| 5   | 1       |         | |
+| Id  | Next    | Answer  | Buttons          | Handler      |
+|:----|:--------|:--------|:-----------------|:-------------|
+| 0   | 1       | Кто ты? |                  |              |
+| 1   | 1,2,3,4 | Ты HR?  | HR, NOT HR, CALC | ButtonSelect |
+| 2   | 2       | HR      | YES, NO          | ButtonSelect |
+| 3   | 3       | NON HR  | YES, NO          | ButtonSelect |
+| 4   | 5       | =+-*    |                  | Calculate    |
+| 5   | 1       |         |                  |              |

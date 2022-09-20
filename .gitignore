@@ -16,3 +16,4 @@
 dist/
 .env
 
+/internal/service/ex/cover.ou
