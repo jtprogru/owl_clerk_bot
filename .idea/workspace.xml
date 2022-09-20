@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="be934a40-90d5-4868-ae35-dbf1cc9b7fc2" name="Changes" comment="HomeWork">
+      <change beforePath="$PROJECT_DIR$/internal/service/ex/ex.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/ex/ex.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file:///usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev-fix_interface" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2E1LIBLkFaXGcqEtOkyGPltY5rN" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+    <option name="sortByType" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.format.on.save.advertiser.fired&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/staskuznetsov/Documents/Go/owl_clerk_bot&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/cmd" />
+      <recent name="$PROJECT_DIR$/cmd/app" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Go Test.TestIntSelect in github.com/jtprogru/owl_clerk_bot/internal/service/ex">
+    <configuration name="go build github.com/jtprogru/owl_clerk_bot/cmd/app" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="owl_clerk_bot" />
+      <working_directory value="$PROJECT_DIR$" />
+      <envs>
+        <env name="OWL_BOT_TOKEN" value="1880644008:AAGQRSMmOxK1Y_o5SHBqSneO2Plh95qfE5k" />
+      </envs>
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" />
+        </ENTRIES>
+      </EXTENSION>
+      <kind value="PACKAGE" />
+      <package value="github.com/jtprogru/owl_clerk_bot/cmd/app" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/cmd/app/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestButtonSelect in github.com/jtprogru/owl_clerk_bot/internal/service/ex" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="owl_clerk_bot" />
+      <working_directory value="$PROJECT_DIR$/internal/service/ex" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/jtprogru/owl_clerk_bot/internal/service/ex" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestButtonSelect\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestIntSelect in github.com/jtprogru/owl_clerk_bot/internal/service/ex" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="owl_clerk_bot" />
+      <working_directory value="$PROJECT_DIR$/internal/service/ex" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/jtprogru/owl_clerk_bot/internal/service/ex" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestIntSelect\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go test github.com/jtprogru/owl_clerk_bot/internal/service/ex" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="owl_clerk_bot" />
+      <working_directory value="$PROJECT_DIR$/internal/service/ex" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/jtprogru/owl_clerk_bot/internal/service/ex" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Test.TestIntSelect in github.com/jtprogru/owl_clerk_bot/internal/service/ex" />
+        <item itemvalue="Go Test.go test github.com/jtprogru/owl_clerk_bot/internal/service/ex" />
+        <item itemvalue="Go Test.TestButtonSelect in github.com/jtprogru/owl_clerk_bot/internal/service/ex" />
+        <item itemvalue="Go Build.go build github.com/jtprogru/owl_clerk_bot/cmd/app" />
+        <item itemvalue="Go Build.go build github.com/jtprogru/owl_clerk_bot/cmd/app" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/owl_clerk_bot" />
+    </ignored-roots>
+    <MESSAGE value="Home Work" />
+    <MESSAGE value="Fixet interface" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixet interface" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/owl_clerk_bot$TestButtonSelect_in_github_com_jtprogru_owl_clerk_bot_internal_service_ex.out" NAME="TestButtonSelect in github.com/jtprogru/owl_clerk_bot/internal/service/ex Coverage Results" MODIFIED="1663567597857" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/owl_clerk_bot$go_test_github_com_jtprogru_owl_clerk_bot_internal_service_ex.out" NAME="go test github.com/jtprogru/owl_clerk_bot/internal/service/ex Coverage Results" MODIFIED="1663589221616" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+</project>

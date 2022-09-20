@@ -1,0 +1,152 @@
+Index: cmd/app/main.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package main\n\nimport (\n\t\"context\"\n\t\"github.com/jtprogru/owl_clerk_bot/internal/service/ex\"\n\t\"github.com/sirupsen/logrus\"\n\t\"os\"\n\n\t\"github.com/jtprogru/owl_clerk_bot/internal/transport/tg\"\n)\n\ntype MockAnswer struct {\n\tmsg string\n\tkb  []string\n}\n\nfunc (ma MockAnswer) GetMessage() string {\n\treturn ma.msg\n}\n\nfunc (ma MockAnswer) GetKeyboard() []string {\n\treturn ma.kb\n}\n\ntype csm struct {\n\tsm *ex.SM\n}\n\nfunc (s csm) SaveOrUpdateState(ctx context.Context, p tg.IProfile, m tg.IMessage) (tg.Answer, error) {\n\treturn s.sm.SaveOrUpdateState(ctx, p, m)\n}\n\nfunc main() {\n\tlogger := logrus.New()\n\tlogger.Formatter = &logrus.TextFormatter{\n\t\tDisableColors:   true,\n\t\tTimestampFormat: \"2006-01-02T15:04:05\",\n\t\tFullTimestamp:   true,\n\t}\n\tlogger.Out = os.Stdout\n\tlogger.SetReportCaller(true)\n\n\tbotToken := os.Getenv(\"OWL_BOT_TOKEN\")\n\tcfg := &tg.Config{\n\t\tBotToken: botToken,\n\t\tIsDebug:  false,\n\t}\n\tmocksm := csm{\n\t\tsm: ex.NewSM(),\n\t}\n\tclient := tg.NewTG(mocksm, logger, cfg)\n\n\tclient.Run()\n\tlogger.Info(\"bot stopped...\")\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/cmd/app/main.go b/cmd/app/main.go
+--- a/cmd/app/main.go	
++++ b/cmd/app/main.go	
+@@ -5,23 +5,11 @@
+ 	"github.com/jtprogru/owl_clerk_bot/internal/service/ex"
+ 	"github.com/sirupsen/logrus"
+ 	"os"
++	"strconv"
+ 
+ 	"github.com/jtprogru/owl_clerk_bot/internal/transport/tg"
+ )
+ 
+-type MockAnswer struct {
+-	msg string
+-	kb  []string
+-}
+-
+-func (ma MockAnswer) GetMessage() string {
+-	return ma.msg
+-}
+-
+-func (ma MockAnswer) GetKeyboard() []string {
+-	return ma.kb
+-}
+-
+ type csm struct {
+ 	sm *ex.SM
+ }
+@@ -41,9 +29,10 @@
+ 	logger.SetReportCaller(true)
+ 
+ 	botToken := os.Getenv("OWL_BOT_TOKEN")
++	debug, _ := strconv.ParseBool(os.Getenv("DEBUG"))
+ 	cfg := &tg.Config{
+ 		BotToken: botToken,
+-		IsDebug:  false,
++		IsDebug:  debug,
+ 	}
+ 	mocksm := csm{
+ 		sm: ex.NewSM(),
+Index: .gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Binaries for programs and plugins\n*.exe\n*.exe~\n*.dll\n*.so\n*.dylib\n\n# Test binary, built with `go test -c`\n*.test\n\n# Output of the go coverage tool, specifically when used with LiteIDE\n*.out\n\n# Dependency directories (remove the comment below to include it)\n# vendor/\ndist/\n.env\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.gitignore b/.gitignore
+--- a/.gitignore	
++++ b/.gitignore	
+@@ -15,4 +15,5 @@
+ # vendor/
+ dist/
+ .env
++.idea
+ 
+Index: internal/service/ex/ex.go
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ex\n\nimport (\n\t\"context\"\n)\n\ntype SM struct {\n\tstore *StateStorage\n}\n\nfunc NewSM() *SM {\n\treturn &SM{store: NewStateStorage()}\n}\n\ntype answer struct {\n\tmsg     string\n\tbuttons []string\n}\n\nfunc (a answer) GetMessage() string {\n\treturn a.msg\n}\nfunc (a answer) GetKeyboard() []string {\n\treturn a.buttons\n}\n\ntype Profile interface {\n\tGetUID() int64\n\tGetFirstName() string\n\tGetLastName() string\n\tGetUsername() string\n}\n\ntype Message interface {\n\tGetMessage() string\n}\n\ntype StateStorage struct {\n\ts map[int64]int\n}\n\nfunc (s *StateStorage) GetState(userId int64) State {\n\tstateId := s.s[userId]\n\tswitch stateId {\n\tcase 0:\n\t\treturn StartState{}\n\tcase 1:\n\t\treturn WelcomeState{}\n\tcase 2:\n\t\treturn HRState{}\n\tcase 3:\n\t\treturn NonHRState{}\n\tdefault:\n\t\treturn WelcomeState{}\n\t}\n}\n\nfunc (s *StateStorage) SetState(userId int64, stateId int) {\n\ts.s[userId] = stateId\n}\n\nfunc NewStateStorage() *StateStorage {\n\treturn &StateStorage{s: map[int64]int{}}\n}\n\nfunc (s SM) SaveOrUpdateState(ctx context.Context, p Profile, m Message) (answer, error) {\n\tstate := s.store.GetState(p.GetUID())\n\tstate = state.SelectNextState(p, m)\n\ta := state.GenerateAnswer()\n\ts.store.SetState(p.GetUID(), state.GetID())\n\treturn a, nil\n}\n\ntype State interface {\n\tSelectNextState(p Profile, m Message) State\n\tGenerateAnswer() answer\n\tGetID() int\n}\n\ntype StartState struct{}\n\nfunc (s StartState) SelectNextState(p Profile, m Message) State {\n\treturn WelcomeState{}\n}\n\nfunc (s StartState) GenerateAnswer() answer {\n\treturn answer{}\n}\nfunc (s StartState) GetID() int {\n\treturn 0\n}\n\ntype WelcomeState struct{}\n\nfunc (s WelcomeState) SelectNextState(p Profile, m Message) State {\n\tswitch m.GetMessage() {\n\tcase \"HR\":\n\t\treturn HRState{}\n\tcase \"NonHR\":\n\t\treturn NonHRState{}\n\tdefault:\n\t\treturn WelcomeState{}\n\t}\n}\n\nfunc (s WelcomeState) GenerateAnswer() answer {\n\treturn answer{\n\t\tmsg: \"Who are you?\",\n\t\tbuttons: []string{\n\t\t\t\"HR\",\n\t\t\t\"NonHR\",\n\t\t},\n\t}\n}\n\nfunc (s WelcomeState) GetID() int {\n\treturn 1\n}\n\ntype HRState struct{}\n\nfunc (s HRState) SelectNextState(p Profile, m Message) State {\n\treturn HRState{}\n}\n\nfunc (s HRState) GenerateAnswer() answer {\n\treturn answer{\n\t\tmsg: \"Ты HR\",\n\t\tbuttons: []string{\n\t\t\t\"OK\",\n\t\t\t\"NOK\",\n\t\t},\n\t}\n}\nfunc (s HRState) GetID() int {\n\treturn 2\n}\n\ntype NonHRState struct{}\n\nfunc (s NonHRState) SelectNextState(p Profile, m Message) State {\n\treturn NonHRState{}\n}\n\nfunc (s NonHRState) GenerateAnswer() answer {\n\treturn answer{\n\t\tmsg: \"Ты NonHR\",\n\t\tbuttons: []string{\n\t\t\t\"OK\",\n\t\t\t\"NOK\",\n\t\t},\n\t}\n}\n\nfunc (s NonHRState) GetID() int {\n\treturn 3\n}\n
+===================================================================
+diff --git a/internal/service/ex/ex.go b/internal/service/ex/ex.go
+--- a/internal/service/ex/ex.go	
++++ b/internal/service/ex/ex.go	
+@@ -2,6 +2,7 @@
+ 
+ import (
+ 	"context"
++	"fmt"
+ )
+ 
+ type SM struct {
+@@ -35,13 +36,32 @@
+ 	GetMessage() string
+ }
+ 
++type Button struct {
++	sButton  map[string]int // кнопки [текст]NextState
++	sMessage string         // сообщение
++}
++
+ type StateStorage struct {
+-	s map[int64]int
++	id      int64
++	cState  int
++	buttons []Button
++}
++
++func NewStateStorage() *StateStorage {
++	ss := Button{sButton: map[string]int{}}
++	ss.sButton["Yes"] = 1
++	ss.sButton["NO"] = 0
++	ss.sMessage = "You HR"
++
++	fmt.Println(ss)
++	sm := &StateStorage{}
++
++	return sm
+ }
+ 
+-func (s *StateStorage) GetState(userId int64) State {
+-	stateId := s.s[userId]
+-	switch stateId {
++func (s *StateStorage) GetState(userID int64) State {
++	stateID := s.cState
++	switch stateID {
+ 	case 0:
+ 		return StartState{}
+ 	case 1:
+@@ -56,11 +76,7 @@
+ }
+ 
+ func (s *StateStorage) SetState(userId int64, stateId int) {
+-	s.s[userId] = stateId
+-}
+-
+-func NewStateStorage() *StateStorage {
+-	return &StateStorage{s: map[int64]int{}}
++	s.cState = stateId
+ }
+ 
+ func (s SM) SaveOrUpdateState(ctx context.Context, p Profile, m Message) (answer, error) {
+@@ -72,18 +88,18 @@
+ }
+ 
+ type State interface {
+-	SelectNextState(p Profile, m Message) State
+-	GenerateAnswer() answer
++	SelectNextState(p Profile, m Message, b Button) State
++	GenerateAnswer(b Button) answer
+ 	GetID() int
+ }
+ 
+ type StartState struct{}
+ 
+-func (s StartState) SelectNextState(p Profile, m Message) State {
++func (s StartState) SelectNextState(p Profile, m Message, b Button) State {
+ 	return WelcomeState{}
+ }
+ 
+-func (s StartState) GenerateAnswer() answer {
++func (s StartState) GenerateAnswer(b Button) answer {
+ 	return answer{}
+ }
+ func (s StartState) GetID() int {

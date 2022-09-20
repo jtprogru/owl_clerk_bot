@@ -2,6 +2,7 @@ package ex
 
 import (
 	"context"
+	"strconv"
 )
 
 type SM struct {
@@ -210,6 +211,21 @@ func ButtonSelect(nx []int, bt []string, cs int) func(p Profile, m Message) int 
 			}
 		}
 		return cs
+	}
+}
+
+func IntSelect(nx []int, bt []string, cs int) func(p Profile, m Message) int {
+	return func(p Profile, m Message) int {
+		num, err := strconv.Atoi(m.GetMessage())
+		if err != nil {
+			return cs
+		}
+		switch num % 2 {
+		case 0:
+			return 1
+		default:
+			return 0
+		}
 	}
 }
 

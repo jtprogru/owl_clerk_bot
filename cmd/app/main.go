@@ -2,28 +2,28 @@ package main
 
 import (
 	"context"
-	"github.com/jtprogru/owl_clerk_bot/internal/service/sm"
+	"github.com/jtprogru/owl_clerk_bot/internal/service/ex"
 	"github.com/sirupsen/logrus"
 	"os"
 
 	"github.com/jtprogru/owl_clerk_bot/internal/transport/tg"
 )
 
-type MockAnswer struct {
-	msg string
-	kb  []string
-}
-
-func (ma MockAnswer) GetMessage() string {
-	return ma.msg
-}
-
-func (ma MockAnswer) GetKeyboard() []string {
-	return ma.kb
-}
-
+//type MockAnswer struct {
+//	msg string
+//	kb  []string
+//}
+//
+//func (ma MockAnswer) GetMessage() string {
+//	return ma.msg
+//}
+//
+//func (ma MockAnswer) GetKeyboard() []string {
+//	return ma.kb
+//}
+//
 type csm struct {
-	sm *sm.SM
+	sm *ex.SM
 }
 
 func (s csm) SaveOrUpdateState(ctx context.Context, p tg.IProfile, m tg.IMessage) (tg.Answer, error) {
@@ -46,7 +46,7 @@ func main() {
 		IsDebug:  false,
 	}
 	mocksm := csm{
-		sm: sm.NewSM(),
+		sm: ex.NewSM(),
 	}
 	client := tg.NewTG(mocksm, logger, cfg)
 
