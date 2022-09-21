@@ -49,7 +49,7 @@ func (s *States) Update(smt smentities.SM) (*smentities.SM, error) {
 	return &smt, nil
 }
 
-func (s States) Delete(id int) error {
+func (s *States) Delete(id int) error {
 	s.Lock()
 	defer s.Unlock()
 
