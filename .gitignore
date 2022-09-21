@@ -16,4 +16,4 @@
 dist/
 .env
 
-/internal/service/ex/cover.ou
+/Makefile_old

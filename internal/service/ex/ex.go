@@ -159,11 +159,11 @@ type State interface {
 //}
 
 type StateTable struct {
-	Id       int
-	NextIds  []int
-	Answer   string
-	Buttons  []string
-	Heandler string
+	Id      int
+	NextIds []int
+	Answer  string
+	Buttons []string
+	Handler string
 }
 
 type GeneratedState struct {
@@ -191,7 +191,7 @@ func (g GeneratedState) GetID() int {
 }
 
 func GenerateState(st StateTable) State {
-	return GeneratedState{Id: st.Id, Answer: answer{st.Answer, st.Buttons}, SelectNS: HeandlerTable[st.Heandler](st.NextIds, st.Buttons, st.Id)}
+	return GeneratedState{Id: st.Id, Answer: answer{st.Answer, st.Buttons}, SelectNS: HeandlerTable[st.Handler](st.NextIds, st.Buttons, st.Id)}
 }
 
 func ButtonSelect(nx []int, bt []string, cs int) func(p Profile, m Message) int {
