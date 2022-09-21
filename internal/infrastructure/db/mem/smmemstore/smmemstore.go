@@ -20,7 +20,7 @@ func NewStates() *States {
 	}
 }
 
-func (s States) Create(sm smentities.SM) (int, error) {
+func (s *States) Create(sm smentities.SM) (int, error) {
 	for _, st := range s.m {
 		if st.Id == sm.Id {
 			return st.Id, nil
@@ -30,7 +30,7 @@ func (s States) Create(sm smentities.SM) (int, error) {
 	return sm.Id, nil
 }
 
-func (s States) Read(ind int) (*smentities.SM, error) {
+func (s *States) Read(ind int) (*smentities.SM, error) {
 	s.Lock()
 	defer s.Unlock()
 
@@ -41,7 +41,7 @@ func (s States) Read(ind int) (*smentities.SM, error) {
 	return nil, errors.New("state Not Found")
 }
 
-func (s States) Update(smt smentities.SM) (*smentities.SM, error) {
+func (s *States) Update(smt smentities.SM) (*smentities.SM, error) {
 	s.Lock()
 	defer s.Unlock()
 	s.m[smt.Id] = smt
