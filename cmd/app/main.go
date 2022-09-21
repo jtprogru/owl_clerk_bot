@@ -44,9 +44,9 @@ func main() {
 	logger.Out = os.Stdout
 	logger.SetReportCaller(true)
 	// создаем стор
-	smSt := smmemstore.NewStates()
+	smSt := smmemstore.NewMemStore()
 	// передаем стор в репозиторий
-	smRp := smrepo.NewSmStore(smSt)
+	smRp := smrepo.NewSmRepo(smSt)
 
 	// Для себя сделал небольшую проверку, было лень писать тест
 	State0 := smentities.SM{
@@ -54,22 +54,38 @@ func main() {
 		NextIds: []int{1, 6, 2, 4},
 		Answer:  "Test",
 		Buttons: []string{"Button1", "Button6", "Button2", "Button4"},
-		Handler: "Test Func",
+		Handler: "State0",
+	}
+
+	State1 := smentities.SM{
+		Id:      1,
+		NextIds: []int{6, 2},
+		Answer:  "Test",
+		Buttons: []string{"Button6", "Button2"},
+		Handler: "Func State1",
 	}
 	st0, err := smRp.Create(State0)
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	fmt.Println(smRp.Read(st0))
 
+	st1, err := smRp.Create(State1)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(smRp.Read(st1))
+
 	State0.Answer = "Update Test"
-	smRp.Update(&State0)
+	smRp.Update(State0)
 
 	fmt.Println(smRp.Read(st0))
 
 	smRp.Delete(st0)
 
 	fmt.Println(smRp.Read(st0))
+	fmt.Println(smRp.Read(st1))
 
 	os.Exit(1)
 

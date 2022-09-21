@@ -15,7 +15,7 @@ type States struct {
 	smStore SmStore
 }
 
-func NewSmStore(smstore SmStore) *States {
+func NewSmRepo(smstore SmStore) *States {
 	return &States{
 		smStore: smstore,
 	}
@@ -37,8 +37,8 @@ func (st *States) Read(id int) (*smentities.SM, error) {
 	return smt, nil
 }
 
-func (st *States) Update(smt *smentities.SM) (*smentities.SM, error) {
-	smt, err := st.smStore.Update(*smt)
+func (st *States) Update(sm smentities.SM) (*smentities.SM, error) {
+	smt, err := st.smStore.Update(sm)
 	if err != nil {
 		return nil, fmt.Errorf("error update State: %w", err)
 	}

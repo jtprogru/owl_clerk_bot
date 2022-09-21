@@ -14,7 +14,7 @@ type States struct {
 	m map[int]smentities.SM
 }
 
-func NewStates() *States {
+func NewMemStore() *States {
 	return &States{
 		m: make(map[int]smentities.SM),
 	}
