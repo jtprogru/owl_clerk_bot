@@ -62,6 +62,15 @@ func main() {
 	}
 	fmt.Println(smRp.Read(st0))
 
+	State0.Answer = "Update Test"
+	smRp.Update(&State0)
+
+	fmt.Println(smRp.Read(st0))
+
+	smRp.Delete(st0)
+
+	fmt.Println(smRp.Read(st0))
+
 	os.Exit(1)
 
 	botToken := os.Getenv("OWL_BOT_TOKEN")
