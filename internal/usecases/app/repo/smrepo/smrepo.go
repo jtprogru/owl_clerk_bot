@@ -29,7 +29,7 @@ func (st *States) Create(sm smentities.SM) (int, error) {
 	return smt, nil
 }
 
-func (st States) Read(id int) (*smentities.SM, error) {
+func (st *States) Read(id int) (*smentities.SM, error) {
 	smt, err := st.smStore.Read(id)
 	if err != nil {
 		return nil, fmt.Errorf("error read State: %w", err)
@@ -37,7 +37,7 @@ func (st States) Read(id int) (*smentities.SM, error) {
 	return smt, nil
 }
 
-func (st States) Update(smt *smentities.SM) (*smentities.SM, error) {
+func (st *States) Update(smt *smentities.SM) (*smentities.SM, error) {
 	smt, err := st.smStore.Update(*smt)
 	if err != nil {
 		return nil, fmt.Errorf("error update State: %w", err)
@@ -45,7 +45,7 @@ func (st States) Update(smt *smentities.SM) (*smentities.SM, error) {
 	return smt, nil
 }
 
-func (st States) Delete(u int) error {
+func (st *States) Delete(u int) error {
 	err := st.smStore.Delete(u)
 	if err != nil {
 		return fmt.Errorf("error delete State: %w", err)
