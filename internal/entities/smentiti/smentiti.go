@@ -1,4 +1,4 @@
-package smentities
+package smentiti
 
 type SM struct {
 	Id      int

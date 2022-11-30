@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/jtprogru/owl_clerk_bot/internal/entities/smentities"
+	"github.com/jtprogru/owl_clerk_bot/internal/entities/smentiti"
 	"github.com/jtprogru/owl_clerk_bot/internal/infrastructure/db/mem/smmemstore"
 	"github.com/jtprogru/owl_clerk_bot/internal/service/ex"
 	"github.com/jtprogru/owl_clerk_bot/internal/usecases/app/repo/smrepo"
@@ -49,7 +49,7 @@ func main() {
 	smRp := smrepo.NewSmRepo(smSt)
 
 	// Для себя сделал небольшую проверку, было лень писать тест
-	State0 := smentities.SM{
+	State0 := smentiti.SM{
 		Id:      0,
 		NextIds: []int{1, 6, 2, 4},
 		Answer:  "Test",
@@ -57,35 +57,35 @@ func main() {
 		Handler: "State0",
 	}
 
-	State1 := smentities.SM{
+	State1 := smentiti.SM{
 		Id:      1,
 		NextIds: []int{6, 2},
 		Answer:  "Test",
 		Buttons: []string{"Button6", "Button2"},
 		Handler: "Func State1",
 	}
-	st0, err := smRp.Create(State0)
+	st0, err := smRp.CreateState(State0)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println(smRp.Read(st0))
+	fmt.Println(smRp.ReadState(st0))
 
-	st1, err := smRp.Create(State1)
+	st1, err := smRp.CreateState(State1)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(smRp.Read(st1))
+	fmt.Println(smRp.ReadState(st1))
 
 	State0.Answer = "Update Test"
-	smRp.Update(State0)
+	smRp.UpdateState(State0)
 
-	fmt.Println(smRp.Read(st0))
+	fmt.Println(smRp.ReadState(st0))
 
-	smRp.Delete(st0)
+	smRp.DeleteState(st0)
 
-	fmt.Println(smRp.Read(st0))
-	fmt.Println(smRp.Read(st1))
+	fmt.Println(smRp.ReadState(st0))
+	fmt.Println(smRp.ReadState(st1))
 
 	os.Exit(1)
 

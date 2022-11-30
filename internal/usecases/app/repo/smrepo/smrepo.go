@@ -2,15 +2,16 @@ package smrepo
 
 import (
 	"fmt"
-	"github.com/jtprogru/owl_clerk_bot/internal/entities/smentities"
+	"github.com/jtprogru/owl_clerk_bot/internal/entities/smentiti"
 )
 
 type SmStore interface {
-	Create(smentities.SM) (int, error)
-	Read(int) (*smentities.SM, error)
-	Update(smentities.SM) (*smentities.SM, error)
-	Delete(u int) error
+	CreateState(smentiti.SM) (int, error)
+	ReadState(int) (*smentiti.SM, error)
+	UpdateState(smentiti.SM) (*smentiti.SM, error)
+	DeleteState(u int) error
 }
+
 type States struct {
 	smStore SmStore
 }
@@ -21,32 +22,32 @@ func NewSmRepo(smstore SmStore) *States {
 	}
 }
 
-func (st *States) Create(sm smentities.SM) (int, error) {
-	smt, err := st.smStore.Create(sm)
+func (st *States) CreateState(sm smentiti.SM) (int, error) {
+	smt, err := st.smStore.CreateState(sm)
 	if err != nil {
 		return -100, fmt.Errorf("error create State: %w", err)
 	}
 	return smt, nil
 }
 
-func (st *States) Read(id int) (*smentities.SM, error) {
-	smt, err := st.smStore.Read(id)
+func (st *States) ReadState(id int) (*smentiti.SM, error) {
+	smt, err := st.smStore.ReadState(id)
 	if err != nil {
 		return nil, fmt.Errorf("error read State: %w", err)
 	}
 	return smt, nil
 }
 
-func (st *States) Update(sm smentities.SM) (*smentities.SM, error) {
-	smt, err := st.smStore.Update(sm)
+func (st *States) UpdateState(sm smentiti.SM) (*smentiti.SM, error) {
+	smt, err := st.smStore.UpdateState(sm)
 	if err != nil {
 		return nil, fmt.Errorf("error update State: %w", err)
 	}
 	return smt, nil
 }
 
-func (st *States) Delete(u int) error {
-	err := st.smStore.Delete(u)
+func (st *States) DeleteState(u int) error {
+	err := st.smStore.DeleteState(u)
 	if err != nil {
 		return fmt.Errorf("error delete State: %w", err)
 	}

@@ -4,8 +4,15 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="be934a40-90d5-4868-ae35-dbf1cc9b7fc2" name="Changes" comment="HomeWork">
+    <list default="true" id="be934a40-90d5-4868-ae35-dbf1cc9b7fc2" name="Changes" comment="HomeWork - Fixed method name (bug fix)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/app/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/app/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/entities/smentities/smentiti.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/entities/smentiti/smentiti.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/infrastructure/db/mem/smmemstore/smmemstore.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infrastructure/db/mem/smmemstore/smmemstore.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/service/ex/ex.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/ex/ex.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/ex/ext_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/ex/ext_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/usecases/app/repo/smrepo/smrepo.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecases/app/repo/smrepo/smrepo.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,77 +65,57 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/internal/infrastructure/db/mem/smmemstore" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/cmd" />
       <recent name="$PROJECT_DIR$/cmd/app" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.TestIntSelect in github.com/jtprogru/owl_clerk_bot/internal/service/ex">
+  <component name="RunManager" selected="Makefile Target.run.cmd">
     <configuration name="go build github.com/jtprogru/owl_clerk_bot/cmd/app" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="owl_clerk_bot" />
       <working_directory value="$PROJECT_DIR$" />
-      <envs>
-        <env name="OWL_BOT_TOKEN" value="1880644008:AAGQRSMmOxK1Y_o5SHBqSneO2Plh95qfE5k" />
-      </envs>
-      <EXTENSION ID="net.ashald.envfile">
-        <option name="IS_ENABLED" value="false" />
-        <option name="IS_SUBST" value="false" />
-        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
-        <option name="IS_IGNORE_MISSING_FILES" value="false" />
-        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
-        <ENTRIES>
-          <ENTRY IS_ENABLED="true" PARSER="runconfig" />
-        </ENTRIES>
-      </EXTENSION>
       <kind value="PACKAGE" />
       <package value="github.com/jtprogru/owl_clerk_bot/cmd/app" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$/cmd/app/main.go" />
       <method v="2" />
     </configuration>
-    <configuration name="TestButtonSelect in github.com/jtprogru/owl_clerk_bot/internal/service/ex" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="owl_clerk_bot" />
-      <working_directory value="$PROJECT_DIR$/internal/service/ex" />
-      <root_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="github.com/jtprogru/owl_clerk_bot/internal/service/ex" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestButtonSelect\E$" />
+    <configuration name="cover.out" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="cover.out" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
       <method v="2" />
     </configuration>
-    <configuration name="TestIntSelect in github.com/jtprogru/owl_clerk_bot/internal/service/ex" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="owl_clerk_bot" />
-      <working_directory value="$PROJECT_DIR$/internal/service/ex" />
-      <root_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="github.com/jtprogru/owl_clerk_bot/internal/service/ex" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestIntSelect\E$" />
+    <configuration name="run.cmd" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="run.cmd" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
       <method v="2" />
     </configuration>
-    <configuration name="go test github.com/jtprogru/owl_clerk_bot/internal/service/ex" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="owl_clerk_bot" />
-      <working_directory value="$PROJECT_DIR$/internal/service/ex" />
-      <root_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="github.com/jtprogru/owl_clerk_bot/internal/service/ex" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
+    <configuration name="test" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="test" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="test.coverage" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="test.coverage" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestIntSelect in github.com/jtprogru/owl_clerk_bot/internal/service/ex" />
-        <item itemvalue="Go Test.go test github.com/jtprogru/owl_clerk_bot/internal/service/ex" />
-        <item itemvalue="Go Test.TestButtonSelect in github.com/jtprogru/owl_clerk_bot/internal/service/ex" />
+        <item itemvalue="Makefile Target.run.cmd" />
         <item itemvalue="Go Build.go build github.com/jtprogru/owl_clerk_bot/cmd/app" />
-        <item itemvalue="Go Build.go build github.com/jtprogru/owl_clerk_bot/cmd/app" />
+        <item itemvalue="Makefile Target.test.coverage" />
+        <item itemvalue="Makefile Target.test" />
+        <item itemvalue="Makefile Target.cover.out" />
       </list>
     </recent_temporary>
   </component>
@@ -153,7 +140,11 @@
     </ignored-roots>
     <MESSAGE value="Home Work" />
     <MESSAGE value="Fixet interface" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixet interface" />
+    <MESSAGE value="HomeWork" />
+    <MESSAGE value="HomeWork - State machine repo &amp; State machine memstore" />
+    <MESSAGE value="HomeWork - State machine repo &amp; State machine memstore. BugFix" />
+    <MESSAGE value="HomeWork - Fixed method name (bug fix)" />
+    <option name="LAST_COMMIT_MESSAGE" value="HomeWork - Fixed method name (bug fix)" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

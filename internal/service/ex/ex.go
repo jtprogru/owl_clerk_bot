@@ -2,6 +2,7 @@ package ex
 
 import (
 	"context"
+	"github.com/jtprogru/owl_clerk_bot/internal/usecases/app/repo/smrepo"
 	"strconv"
 )
 
@@ -164,6 +165,7 @@ type StateTable struct {
 	Answer  string
 	Buttons []string
 	Handler string
+	Smr     *smrepo.States
 }
 
 type GeneratedState struct {
@@ -191,7 +193,14 @@ func (g GeneratedState) GetID() int {
 }
 
 func GenerateState(st StateTable) State {
-	return GeneratedState{Id: st.Id, Answer: answer{st.Answer, st.Buttons}, SelectNS: HeandlerTable[st.Handler](st.NextIds, st.Buttons, st.Id)}
+	stt, err := st.Smr.Read(st.Id)
+	if err != nil {
+		return nil
+	}
+
+	return GeneratedState{Id: st.Id,
+		Answer:   answer{stt.Answer, stt.Buttons},
+		SelectNS: HeandlerTable[stt.Handler](stt.NextIds, stt.Buttons, stt.Id)}
 }
 
 func ButtonSelect(nx []int, bt []string, cs int) func(p Profile, m Message) int {

@@ -1,5 +1,3 @@
-SHELL := /bin/bash
-.SILENT:
 .DEFAULT_GOAL := help
 
 # Global vars
@@ -7,101 +5,34 @@ export SYS_GO=$(shell which go)
 export SYS_GOFMT=$(shell which gofmt)
 export SYS_DOCKER=$(shell which docker)
 
-export BINARY_DIR=dist
+export BINARY_DIR=bin
 export BINARY_NAME=owl_clerk_bot
-export DOCKER_REPO="ghcr.io/jtprogru/$(BINARY_NAME)"
-export LATEST_COMMIT_SHA=$(shell git rev-parse --short HEAD)
-
-include .env
-export $(shell sed 's/=.*//' .env)
-
-test.env:
-	env
-
-.PHONY: run.cmd
-## Run as go run cmd/app/main.go
-run.cmd: cmd/app/main.go
-	$(SYS_GO) run cmd/app/main.go
 
 .PHONY: run.bin
-## Run as binary
-run.bin: build.bin
-	source .env && ./$(BINARY_DIR)/$(BINARY_NAME)
-
-.PHONY: run.dc
-## Run in Docker
-run.dc: build.img
-	$(SYS_DOCKER) compose up -d
-
-.PHONY: down.dc
-## Down Docker compose
-down.dc:
-	$(SYS_DOCKER) down -v
-
-.PHONY: install-deps
-## Install all requirements
-install-deps: go.mod
-	$(SYS_GO) mod tidy
+## Run & build bin
+build:
+	@echo 'Start build'
+	@$(SYS_GO) build -o ./$(BINARY_DIR)/$(BINARY_NAME) cmd/app/main.go
 
 .PHONY: build.bin
 ## Build bin file from go
 build.bin: cmd/app/main.go
 	$(SYS_GO) mod download && CGO_ENABLED=0 $(SYS_GO) build -o ./$(BINARY_DIR)/$(BINARY_NAME) cmd/app/main.go
 
-.PHONY: build.img
-## Build docker image
-build.img: Dockerfile
-	$(SYS_DOCKER) build -t $(DOCKER_REPO):$(LATEST_COMMIT_SHA) .
-
-.PHONY: fmt
-## Run go fmt
-fmt:
-	$(SYS_GOFMT) -s -w .
-
-.PHONY: vet
-## Run go vet ./...
-vet:
-	$(SYS_GO) vet ./...
-
-.PHONY: clean
-## Clean all artifacts
-clean:
-	rm -rf $(BINARY_DIR)
+.PHONY: run.cmd
+## Run as go run cmd/app/main.go
+run.cmd: cmd/app/main.go
+	$(SYS_GO) run cmd/app/main.go
 
 .PHONY: test
-## Run all test
+## Run test a make cover-file
 test:
-	go test --short -coverprofile=cover.out -v ./...
-	make test.coverage
+	@go test ./... -coverprofile cover.out
 
-#.PHONY: test.integration
-### Run test integration
-#test.integration:
-#	docker run --rm -d -p 27019:27017 --name $$TEST_CONTAINER_NAME -e MONGODB_DATABASE=$$TEST_DB_NAME mongo:4.4-bionic
-#
-#	GIN_MODE=release go test -v ./tests/
-#	docker stop $$TEST_CONTAINER_NAME
-
-#.PHONY: test.coverage
-### Run test coverage
-#test.coverage:
-#	go tool cover -func=cover.out
-
-#.PHONY: swag
-### Run swag
-#swag:
-#	swag init -g internal/app/app.go
-
-.PHONY: lint
-## Run golangci-lint
-lint:
-	golangci-lint -v run --out-format=colored-line-number
-
-#.PHONY: gen
-### Run mockgen
-#gen:
-#	mockgen -source=internal/service/service.go -destination=internal/service/mocks/mock.go
-#	mockgen -source=internal/repository/repository.go -destination=internal/repository/mocks/mock.go
+.PHONY: test.cover
+## Run test coverage
+test.cover: test
+	$(SYS_GO) tool cover -html=cover.out
 
 .PHONY: help
 ## Show this help message

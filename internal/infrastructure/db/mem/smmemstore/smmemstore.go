@@ -2,7 +2,8 @@ package smmemstore
 
 import (
 	"errors"
-	"github.com/jtprogru/owl_clerk_bot/internal/entities/smentities"
+	"github.com/jtprogru/owl_clerk_bot/internal/entities/smentiti"
+
 	"github.com/jtprogru/owl_clerk_bot/internal/usecases/app/repo/smrepo"
 	"sync"
 )
@@ -11,16 +12,18 @@ var _ smrepo.SmStore = &States{}
 
 type States struct {
 	sync.Mutex
-	m map[int]smentities.SM
+	m map[int]smentiti.SM
 }
 
 func NewMemStore() *States {
 	return &States{
-		m: make(map[int]smentities.SM),
+		m: make(map[int]smentiti.SM),
 	}
 }
 
-func (s *States) Create(sm smentities.SM) (int, error) {
+func (s *States) CreateState(sm smentiti.SM) (int, error) {
+	s.Lock()
+	defer s.Unlock()
 	for _, st := range s.m {
 		if st.Id == sm.Id {
 			return st.Id, nil
@@ -30,7 +33,7 @@ func (s *States) Create(sm smentities.SM) (int, error) {
 	return sm.Id, nil
 }
 
-func (s *States) Read(ind int) (*smentities.SM, error) {
+func (s *States) ReadState(ind int) (*smentiti.SM, error) {
 	s.Lock()
 	defer s.Unlock()
 
@@ -41,7 +44,7 @@ func (s *States) Read(ind int) (*smentities.SM, error) {
 	return nil, errors.New("state Not Found")
 }
 
-func (s *States) Update(smt smentities.SM) (*smentities.SM, error) {
+func (s *States) UpdateState(smt smentiti.SM) (*smentiti.SM, error) {
 	s.Lock()
 	defer s.Unlock()
 	s.m[smt.Id] = smt
@@ -49,7 +52,7 @@ func (s *States) Update(smt smentities.SM) (*smentities.SM, error) {
 	return &smt, nil
 }
 
-func (s *States) Delete(id int) error {
+func (s *States) DeleteState(id int) error {
 	s.Lock()
 	defer s.Unlock()
 

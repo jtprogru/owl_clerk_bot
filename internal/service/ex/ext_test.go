@@ -274,8 +274,8 @@ func TestIntSelect(t *testing.T) {
 	for _, tt := range tests {
 		{
 			t.Run(tt.name, func(t *testing.T) {
-				got := IntSelect(tt.nx, tt.btn, tt.cs)
-				res := got(tt.p, tt.m)
+				res := IntSelect(tt.nx, tt.btn, tt.cs)(tt.p, tt.m)
+				//res := got(tt.p, tt.m)
 				if (res != tt.want) != tt.wantErr {
 					t.Errorf("ButtonSelect() result = %d, want result %v", res, tt.want)
 				}
