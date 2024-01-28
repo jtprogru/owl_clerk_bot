@@ -20,7 +20,7 @@ COPY . .
 RUN go mod download && CGO_ENABLED=0 go build -o ./dist/owl_clerk_bot cmd/app/main.go
 
 # Start fresh from a smaller image
-FROM alpine:3.9
+FROM alpine:3.18.6
 RUN apk add ca-certificates
 
 COPY --from=build_base /tmp/owl_clerk_bot/dist/owl_clerk_bot /app/owl_clerk_bot
