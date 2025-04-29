@@ -16,6 +16,17 @@ type TG struct {
 	sm     StateMachine
 }
 
+type IProfile interface {
+	GetUID() int64
+	GetFirstName() string
+	GetLastName() string
+	GetUsername() string
+}
+
+type IMessage interface {
+	GetMessage() string
+}
+
 type Profile struct {
 	uid                    int64
 	fName, lName, username string
@@ -45,8 +56,12 @@ func (m Message) GetMessage() string {
 	return m.msg
 }
 
+type Example interface {
+	GetA() int
+}
+
 type StateMachine interface {
-	SaveOrUpdateState(ctx context.Context, p Profile, m Message) (Answer, error)
+	SaveOrUpdateState(ctx context.Context, p IProfile, m IMessage) (Answer, error)
 }
 
 type Answer interface {
