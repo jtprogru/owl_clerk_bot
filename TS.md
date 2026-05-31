@@ -70,7 +70,7 @@ internal/http             Web UI (ServeMux + html/template + embed)
 
 ## Стек
 
-- Go 1.22 (slog, ServeMux pattern matching, embed)
+- Go 1.25 (slog, ServeMux pattern matching, embed)
 - `gopkg.in/telebot.v3` — Telegram long polling
 - `modernc.org/sqlite` — pure-Go SQLite (без CGO)
 - stdlib `net/http` + `html/template`
