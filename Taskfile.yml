@@ -2,12 +2,16 @@
 ---
 version: "3"
 
+dotenv: ['.env']
+
 vars:
   HOME:
     sh: echo $HOME
   BINARY_NAME: owl-clerk-bot
   GOPATH:
     sh: echo $GOPATH
+  MAIN_PKG: ./cmd/app
+  WEB_URL: 'http://{{ .OWL_SERVE_HOST | default "127.0.0.1" }}:{{ .OWL_SERVE_PORT | default "8000" }}'
 
 tasks:
   default:
@@ -15,85 +19,173 @@ tasks:
       - task --list
     silent: true
 
-  run:cmd:
-    desc: Run as go run main.go
-    cmds:
-      - "go run main.go {{ .CLI_ARGS }}"
+  # ---- High-level shortcuts ----
 
-  run:bin:
-    desc: Run as binary
-    deps:
-      - build:bin
+  run:
+    desc: Build and run the bot locally (loads .env automatically)
+    deps: [build:bin]
     cmds:
       - "./dist/{{ .BINARY_NAME }} {{ .CLI_ARGS }}"
 
+  dev:
+    desc: Run via `go run` with .env loaded (no build step)
+    cmds:
+      - "go run {{ .MAIN_PKG }} {{ .CLI_ARGS }}"
+
+  watch:
+    desc: Auto-restart on .go change (requires watchexec)
+    preconditions:
+      - sh: command -v watchexec
+        msg: "watchexec not found: brew install watchexec"
+    cmds:
+      - "watchexec -r -c clear -e go -- go run {{ .MAIN_PKG }}"
+
+  web:open:
+    desc: Open the web UI in default browser
+    cmds:
+      - "open {{ .WEB_URL }}"
+
+  # ---- Build / install ----
+
+  run:cmd:
+    desc: Alias for `dev`
+    cmds:
+      - task: dev
+
+  run:bin:
+    desc: Alias for `run`
+    cmds:
+      - task: run
+
+  build:bin:
+    desc: Build binary into ./dist
+    cmds:
+      - "go mod download"
+      - "CGO_ENABLED=0 go build -o ./dist/{{ .BINARY_NAME }} {{ .MAIN_PKG }}"
+
+  install:global:
+    desc: go install
+    cmds:
+      - "go install {{ .MAIN_PKG }}"
+
+  install:dev:
+    desc: Build and install to $GOPATH/bin
+    cmds:
+      - "go mod download"
+      - "CGO_ENABLED=0 go build -o {{ .GOPATH }}/bin/{{ .BINARY_NAME }} {{ .MAIN_PKG }}"
+
   tidy:
-    desc: Install all requirements
+    desc: go mod tidy
     preconditions:
       - test -f go.mod
     cmds:
       - "go mod tidy"
 
-  build:bin:
-    desc: Build bin file from go
-    preconditions:
-      - test -f main.go
-    cmds:
-      - "go mod download"
-      - "CGO_ENABLED=0 go build -o ./dist/{{ .BINARY_NAME }} main.go"
+  # ---- Quality ----
 
   fmt:
-    desc: Run go fmt
+    desc: gofmt + goimports
     cmds:
       - "gofmt -s -w ."
       - "goimports -format-only -d -l -v -w ."
 
   vet:
-    desc: Run go vet ./...
+    desc: go vet ./...
     cmds:
       - "go vet ./..."
 
+  lint:
+    desc: golangci-lint
+    cmds:
+      - "golangci-lint -v run"
+
+  check:
+    desc: vet + lint + test
+    cmds:
+      - task: vet
+      - task: lint
+      - task: test
+
+  # ---- Tests ----
+
   test:
-    desc: Run all test
+    desc: Run all tests (incl. race + coverage)
     cmds:
       - "go test -coverprofile=cover.out -v ./..."
-      - task test:race
-      - task test:coverage
+      - task: test:race
+      - task: test:coverage
 
   test:short:
-    desc: Run short test
+    desc: Run short tests
     cmds:
       - "go test --short -coverprofile=cover.out -v ./..."
 
   test:coverage:
-    desc: Run test coverage
+    desc: Coverage report
     cmds:
       - "go tool cover -func=cover.out"
 
   test:race:
-    desc: Run tests with race
+    desc: Run tests with -race
     cmds:
       - "go test -race -v ./..."
 
   test:watch:
-    desc: Run tests with watchexec
+    desc: Watch tests with watchexec
+    preconditions:
+      - sh: command -v watchexec
+        msg: "watchexec not found: brew install watchexec"
     cmds:
       - 'watchexec -c clear -o do-nothing -d 100ms --exts go ''pkg=".${WATCHEXEC_COMMON_PATH/$PWD/}/..."; echo "running tests for $pkg"; go test "$pkg"'''
 
-  lint:
-    desc: Run golangci-lint
-    cmds:
-      - "golangci-lint -v run"
+  # ---- Database ----
 
-  install:global:
-    desc: Build and install globally
+  db:path:
+    desc: Print the active DB path
+    silent: true
     cmds:
-      - "go install"
+      - 'echo "{{ .OWL_DB_PATH | default "./data/owl.db" }}"'
 
-  install:dev:
-    desc: Build bin file from go and install to
+  db:reset:
+    desc: 🔥 Wipe local SQLite database (./data)
+    prompt: "Delete ./data and lose all local profiles/messages?"
+    cmds:
+      - "rm -rf ./data"
+
+  db:shell:
+    desc: Open sqlite3 shell on the local DB
     preconditions:
-      - test -f main.go
+      - sh: command -v sqlite3
+        msg: "sqlite3 not found"
     cmds:
-      - "go mod download"
-      - "CGO_ENABLED=0 go build -o {{ .GOPATH }}/bin/{{ .BINARY_NAME }} main.go"
+      - 'sqlite3 "{{ .OWL_DB_PATH | default "./data/owl.db" }}"'
+
+  # ---- Docker ----
+
+  docker:up:
+    desc: docker compose up --build (detached)
+    cmds:
+      - "docker compose up --build -d"
+
+  docker:down:
+    desc: docker compose down
+    cmds:
+      - "docker compose down"
+
+  docker:logs:
+    desc: Follow docker compose logs
+    cmds:
+      - "docker compose logs -f"
+
+  # ---- Cleanup ----
+
+  clean:
+    desc: Clean build artifacts
+    cmds:
+      - "rm -rf ./dist ./cover.out"
+
+  clean:all:
+    desc: Clean build artifacts and local DB
+    deps: [clean]
+    cmds:
+      - task: db:reset
