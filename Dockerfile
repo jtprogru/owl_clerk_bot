@@ -1,32 +1,17 @@
-FROM golang:1.19-alpine AS build_base
+FROM golang:1.22-alpine AS build
+WORKDIR /src
 
-RUN apk add --no-cache git
-
-# Set the Current Working Directory inside the container
-WORKDIR /tmp/owl_clerk_bot
-
-# We want to populate the module cache based on the go.{mod,sum} files.
-COPY go.mod .
-COPY go.sum .
-
+COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/owl-clerk-bot ./cmd/app
 
-# Unit tests
-#RUN CGO_ENABLED=0 go test -v
-
-# Build the Go app
-RUN go mod download && CGO_ENABLED=0 go build -o ./dist/owl_clerk_bot cmd/app/main.go
-
-# Start fresh from a smaller image
-FROM alpine:3.9
-RUN apk add ca-certificates
-
-COPY --from=build_base /tmp/owl_clerk_bot/dist/owl_clerk_bot /app/owl_clerk_bot
-
-# This container exposes port 8080 to the outside world
+FROM alpine:3.20
+RUN apk add --no-cache ca-certificates tzdata
+WORKDIR /app
+COPY --from=build /out/owl-clerk-bot /app/owl-clerk-bot
+RUN mkdir -p /app/data
+VOLUME ["/app/data"]
 EXPOSE 8000
-
-# Run the binary program produced by `go install`
-CMD ["/app/owl_clerk_bot"]
+ENTRYPOINT ["/app/owl-clerk-bot"]

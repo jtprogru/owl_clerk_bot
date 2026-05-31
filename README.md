@@ -1,34 +1,58 @@
 # owl_clerk_bot
 
-Бот-секретарь которого я буду использовать везде, где сейчас указан мой прямой Телеграм-аккаунт.
+Личный бот-секретарь для Telegram. Принимает обращения от незнакомых людей,
+проводит короткий опрос (HR / Сотрудничество / Дружба / Разное), сохраняет
+профиль и контакты в SQLite и форвардит сводку владельцу. Управление —
+через команды в личке, inline-кнопки в уведомлениях или веб-морду.
 
 ## Запуск
-Создать файл `.env`:
-```shell
-export OWL_BOT_TOKEN="1234567890:VCDRJHGYUIKMNBGYUIKMNBvfr45678iuyhgtfr567u"
-export OWL_DEBUG=1
-export OWL_SERVE_PORT=8000
-export OWL_SERVE_HOST=127.0.0.1
+
+Создать `.env` (в репо не коммитится):
+
+```env
+OWL_BOT_TOKEN=1234567890:AA...           # токен бота от @BotFather
+OWL_OWNER_ID=123456789                   # твой telegram user id
+OWL_DEBUG=false
+OWL_SERVE_HOST=127.0.0.1
+OWL_SERVE_PORT=8000
+OWL_DB_PATH=./data/owl.db
+OWL_WEB_USER=admin
+OWL_WEB_PASS=change-me
 ```
 
-Выполнить для запуска локально:
+Локально:
+
 ```shell
-make run.bin
+task run:bin
 ```
 
 Доступные команды:
+
 ```shell
-build.bin           Build bin file from go
-build.img           Build docker image
-clean               Clean all artifacts
-down.dc             Down Docker compose
-fmt                 Run go fmt
-help                Show this help message
-install-deps        Install all requirements
-lint                Run golangci-lint
-run.bin             Run as binary
-run.cmd             Run as go run cmd/app/main.go
-run.dc              Run in Docker
-test                Run all test
-vet                 Run go vet ./...
+task --list
 ```
+
+## Стек
+
+- Go 1.22+
+- `gopkg.in/telebot.v3` — Telegram long polling
+- `modernc.org/sqlite` — pure-Go SQLite (без CGO)
+- `log/slog` (stdlib)
+- `net/http` + `html/template` для веб-морды
+
+## Структура
+
+```
+cmd/app                — entrypoint
+internal/config        — env-конфиг
+internal/domain        — типы (Profile, Message, Category, State)
+internal/storage/sqlite — миграции и репозитории
+internal/service/sm    — конечный автомат опроса
+internal/service/intake   — координатор приёма
+internal/service/notify   — уведомления владельцу
+internal/service/outbound — исходящие ответы
+internal/transport/tg  — Telegram handler'ы
+internal/http          — web UI
+```
+
+См. также [TS.md](./TS.md) и план в `~/.claude/plans/`.

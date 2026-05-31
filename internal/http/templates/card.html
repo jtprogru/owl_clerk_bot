@@ -1,0 +1,47 @@
+{{define "content"}}
+<h2>{{.Profile.DisplayName}}{{if .Profile.IsBlocked}} 🚫{{end}}</h2>
+
+<section class="profile">
+  <p><b>UID:</b> {{.Profile.UID}}</p>
+  {{if .Profile.Username}}<p><b>Username:</b> @{{.Profile.Username}}</p>{{end}}
+  <p><b>Категория:</b> {{.Profile.Category.Title}}</p>
+  <p><b>Контакт:</b> {{if .Profile.Contact}}{{.Profile.Contact}}{{else}}—{{end}}</p>
+  <p><b>Первый контакт:</b> {{.Profile.FirstSeenAt.Format "02.01.2006 15:04"}}</p>
+</section>
+
+<h3>Сообщения</h3>
+<ul class="messages">
+{{range .Messages}}
+  <li class="msg msg-{{.Direction}}">
+    <span class="ts">{{.At.Format "02.01 15:04"}}</span>
+    <span class="dir">{{if eq (printf "%s" .Direction) "in"}}← пользователь{{else}}→ бот{{end}}</span>
+    <span class="txt">{{.Text}}</span>
+  </li>
+{{else}}
+  <li>Пусто.</li>
+{{end}}
+</ul>
+
+<h3>Ответить</h3>
+<form method="post" action="/conversations/{{.Profile.UID}}/reply">
+  <textarea name="text" rows="4" required></textarea>
+  <button type="submit">Отправить</button>
+</form>
+
+<h3>Действия</h3>
+<form method="post" action="/conversations/{{.Profile.UID}}/category" class="inline">
+  <select name="category">
+    <option value="hr">HR</option>
+    <option value="coop">Сотрудничество</option>
+    <option value="friend">Дружба</option>
+    <option value="misc">Разное</option>
+    <option value="spam">Спам</option>
+  </select>
+  <button type="submit">Сменить категорию</button>
+</form>
+
+<form method="post" action="/conversations/{{.Profile.UID}}/block" class="inline">
+  <input type="hidden" name="blocked" value="{{if .Profile.IsBlocked}}0{{else}}1{{end}}">
+  <button type="submit">{{if .Profile.IsBlocked}}Разблокировать{{else}}Заблокировать{{end}}</button>
+</form>
+{{end}}

@@ -1,0 +1,29 @@
+{{define "content"}}
+<h2>Дашборд</h2>
+
+<section class="cards">
+  <div class="card">
+    <div class="card-num">{{.Week}}</div>
+    <div class="card-label">сообщений за 7 дней</div>
+  </div>
+  <div class="card">
+    <div class="card-num">{{.Month}}</div>
+    <div class="card-label">за 30 дней</div>
+  </div>
+</section>
+
+<h3>Профили по категориям</h3>
+<table>
+  <thead><tr><th>Категория</th><th>Кол-во</th></tr></thead>
+  <tbody>
+  {{range .Counts}}
+    <tr>
+      <td><a href="/conversations?category={{.Category}}">{{.Category.Title}}</a></td>
+      <td>{{.Count}}</td>
+    </tr>
+  {{else}}
+    <tr><td colspan="2">Пусто.</td></tr>
+  {{end}}
+  </tbody>
+</table>
+{{end}}

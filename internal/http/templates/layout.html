@@ -1,0 +1,26 @@
+{{define "layout"}}<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>owl — {{.Title}}</title>
+<link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+<header>
+  <h1><a href="/">owl</a></h1>
+  <nav>
+    <a href="/">Дашборд</a>
+    <a href="/conversations">Все диалоги</a>
+    <a href="/conversations?category=hr">HR</a>
+    <a href="/conversations?category=coop">Сотр.</a>
+    <a href="/conversations?category=friend">Дружба</a>
+    <a href="/conversations?category=misc">Разное</a>
+    <a href="/conversations?category=spam">Спам</a>
+  </nav>
+</header>
+<main>
+{{template "content" .}}
+</main>
+</body>
+</html>
+{{end}}

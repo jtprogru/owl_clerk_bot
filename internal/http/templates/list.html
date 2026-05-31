@@ -1,0 +1,42 @@
+{{define "content"}}
+<h2>Диалоги{{if .Filter.Category}} — {{.Filter.Category.Title}}{{end}}</h2>
+
+<form method="get" action="/conversations" class="filters">
+  <label>Категория:
+    <select name="category">
+      <option value="">Все</option>
+      <option value="hr"     {{if eq .Filter.Category.String "hr"}}selected{{end}}>HR</option>
+      <option value="coop"   {{if eq .Filter.Category.String "coop"}}selected{{end}}>Сотрудничество</option>
+      <option value="friend" {{if eq .Filter.Category.String "friend"}}selected{{end}}>Дружба</option>
+      <option value="misc"   {{if eq .Filter.Category.String "misc"}}selected{{end}}>Разное</option>
+      <option value="spam"   {{if eq .Filter.Category.String "spam"}}selected{{end}}>Спам</option>
+    </select>
+  </label>
+  <label>
+    <input type="checkbox" name="blocked" value="1" {{if .Filter.Blocked}}checked{{end}}>
+    только заблокированные
+  </label>
+  <button type="submit">Применить</button>
+</form>
+
+<table>
+  <thead>
+    <tr><th>UID</th><th>Имя</th><th>Username</th><th>Категория</th><th>Контакт</th><th>Последняя активность</th><th></th></tr>
+  </thead>
+  <tbody>
+  {{range .Profiles}}
+    <tr {{if .IsBlocked}}class="blocked"{{end}}>
+      <td>{{.UID}}</td>
+      <td><a href="/conversations/{{.UID}}">{{.DisplayName}}</a></td>
+      <td>{{if .Username}}@{{.Username}}{{end}}</td>
+      <td>{{.Category.Title}}</td>
+      <td>{{.Contact}}</td>
+      <td>{{.LastSeenAt.Format "02.01.2006 15:04"}}</td>
+      <td>{{if .IsBlocked}}🚫{{end}}</td>
+    </tr>
+  {{else}}
+    <tr><td colspan="7">Пусто.</td></tr>
+  {{end}}
+  </tbody>
+</table>
+{{end}}
